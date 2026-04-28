@@ -1,0 +1,175 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,600;1,300;1,600&display=swap');
+
+@custom-variant night ([data-night="true"] &);
+
+@theme {
+  --color-primary: #01012d;
+  --color-background: #ffffff;
+  --color-accent: #afd8d4;
+  --color-secondary: #a7c9e1;
+  --color-link: #0568d6;
+  --color-muted: #a9add3;
+  --color-input-bg: #f6f7fa;
+  --color-error: #d20404;
+
+  --color-night-text: rgba(255, 255, 255, 0.96);
+  --color-night-sub:  rgba(210, 225, 255, 0.88);
+  --color-night-muted: rgba(210, 225, 255, 0.82);
+
+  --shadow-wx-button:   0 2px 10px rgba(1,1,45,0.18);
+  --shadow-wx-dropdown: 0 8px 32px rgba(1,1,45,0.14);
+
+  --font-sans: 'Figtree', sans-serif;
+
+  --radius-default: 8px;
+}
+
+@layer utilities {
+  .wx-card-gradient {
+    background: linear-gradient(to bottom, rgba(255,255,255,0.6) 45%, rgba(255,255,255,0) 100%);
+  }
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--color-primary);
+  background: var(--color-background);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: 1.3;
+  scrollbar-gutter: stable;
+}
+
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes wxSpinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes wxSpokeBreath {
+  0%, 100% { transform: scale(1);    }
+  50%       { transform: scale(1.22); }
+}
+@keyframes wxPulseText {
+  0%, 100% { color: #6b7280; }
+  50%       { color: #c4c9d4; }
+}
+.wx-spin-slow    { animation: wxSpinSlow    5s linear       infinite; }
+.wx-spoke-breath {
+  animation:        wxSpokeBreath 2s ease-in-out infinite;
+  transform-origin: 50px 50px;
+}
+.wx-pulse-text   { animation: wxPulseText  2.8s ease-in-out infinite; }
+
+@keyframes wxRainFall {
+  0%   { transform: translateY(-10%) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.7; }
+  100% { transform: translateY(110%) translateX(-8px); opacity: 0; }
+}
+
+@keyframes wxSnowFall {
+  0%   { transform: translateY(-5%) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { transform: translateY(50%) translateX(12px) rotate(180deg); }
+  100% { transform: translateY(110%) translateX(-6px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes wxCloudDrift {
+  0%   { transform: translateX(-120%); opacity: 0; }
+  10%  { opacity: 0.9; }
+  90%  { opacity: 0.9; }
+  100% { transform: translateX(120vw); opacity: 0; }
+}
+
+@keyframes wxMistDrift {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  15%  { opacity: 0.5; }
+  85%  { opacity: 0.5; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes wxFogDrift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-200vw); }
+}
+
+@keyframes wxSunRay {
+  0%, 100% { opacity: 0.35; transform: scaleY(1); }
+  50%       { opacity: 0.55; transform: scaleY(1.06); }
+}
+
+@keyframes wxSunPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.04); opacity: 0.92; }
+}
+
+@keyframes wxCardShake {
+  0%   { transform: translateY(0); }
+  22%  { transform: translateY(-10px); }
+  44%  { transform: translateY(0); }
+  66%  { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+.wx-shake {
+  animation: wxCardShake 0.55s ease-out both;
+}
+
+@keyframes wxLightningFlash {
+  0%, 88%, 92%, 96%, 100% { opacity: 0; }
+  90%, 94%                 { opacity: 0.85; }
+}
+
+@keyframes wxStarTwinkle {
+  0%, 100% { opacity: 0.10; transform: scale(0.7); }
+  45%, 55%  { opacity: 0.95; transform: scale(1.25); }
+}
+
+@keyframes wxCrossStarTwinkle {
+  0%, 100% { opacity: 0.08; transform: scale(0.5) rotate(0deg); }
+  45%       { opacity: 1;   transform: scale(1.6) rotate(22deg); }
+  55%       { opacity: 0.85; transform: scale(1.4) rotate(22deg); }
+}
+
+@keyframes wxWindStreak {
+  0%   { transform: translateX(-5%);  opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 0.6; }
+  100% { transform: translateX(105%); opacity: 0; }
+}
+
+@keyframes wxFlash {
+  0%        { opacity: 0.8; }
+  20%       { opacity: 0; }
+  35%       { opacity: 0.55; }
+  55%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wx-spin-slow,
+  .wx-spoke-breath,
+  .wx-pulse-text,
+  .wx-shake {
+    animation: none !important;
+  }
+
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "tokegon-weather-app",
+  "version": "1.0.0",
+  "description": "Tokegon weather app with React/TypeScript frontend and Node/Express backend",
+  "main": "index.tsx",
+  "scripts": {
+    "install:all": "npm install && npm run install:frontend && npm run install:backend",
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && npm install",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:frontend": "cd frontend && npm run dev",
+    "start:backend": "cd backend && npm run start",
+    "build:all": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "setup-and-start": "npm run install:all && npm run build:all && npm run start",
+    "docker:run": "docker build -t tokegon-weather-app . && docker run -p 8080:8080 --name tokegon-weather-app tokegon-weather-app",
+    "docker:stop": "docker stop tokegon-weather-app && docker rm tokegon-weather-app"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
