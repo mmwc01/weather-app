@@ -1,10 +1,10 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { CityOption } from '../types/weather';
 import { CitiesResponseSchema } from '../schemas/api';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const MIN_CHARS = 1;
-const DEBOUNCE = 300;
+const DEBOUNCE = 150;
 const LIMIT = 10;
 
 interface CachedPage {
@@ -51,6 +51,17 @@ export function useCitySearch(
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentQueryRef = useRef<string | null>(null);
   const pageRef = useRef(1);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/cities?q=&page=1&limit=${LIMIT}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data) return;
+        const parsed = CitiesResponseSchema.safeParse(data);
+        if (parsed.success) cache.current.set('', { cities: parsed.data.cities, hasMore: parsed.data.hasMore });
+      })
+      .catch(() => {});
+  }, []);
 
   const doSearch = useCallback(async (raw: string, allowEmpty = false) => {
     const q = raw.trim().toLowerCase();

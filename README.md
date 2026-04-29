@@ -84,10 +84,11 @@ LIMITATIONS DURING IMPLEMENTATION: the sample from the pdf suggested I display a
 
 - **Animated backgrounds**: the background reacts to actual weather conditions: rain, snow, thunderstorms with lightning, fog, clouds, clear sky with sun/moon/stars, wind with flying leaves
 - **Full city search**: type-ahead search across the full city database (from OpenWeatherMap) with scroll-to-load pagination
-- **Geolocation**: "I'm feeling lucky" button functions like google's feeling lucky button; it randomizes a city to be loaded
+- **Geolocation**: Geolocation tracking, if granted, will load up the city with coordinates closest to your current location with the cities in the list with the weather data (check console for geolocation errors if that feature isn't working, it might be a permission thing)
+- **Just for fun "I'm feeling lucky" button**: "I'm feeling lucky" button functions like google's feeling lucky button; it randomizes a city to be loaded
 - **°C / °F toggle**: changes temperature units
 - **Day/night mode**: switches automatically based on actual sunrise/sunset times for the selected city
-- **Weather preview panel**: cycle through all weather states in the UI without needing real weather input (just a nice to have visual interaction tool)
+- **Weather preview panel**: cycle through all weather states in the UI without needing real weather input (just a nice to have visual interaction/testing tool)
 - **Docker**: single-container build that serves everything
 - **Tests**: frontend (Vitest + Testing Library) and backend both have test coverage
 - **Fly.io deployment**: `fly.toml` included, deploy with `fly deploy`

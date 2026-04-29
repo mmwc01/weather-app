@@ -93,6 +93,10 @@ export default function CitySearch({ onSelect, selectedCity }: CitySearchProps) 
                 <i className="fa-solid fa-xmark" style={{ fontSize: 11 }} />
               </button>
             )}
+
+            {!inputValue && !loading && (
+              <i aria-hidden="true" className="fa-solid fa-chevron-down shrink-0 text-muted" style={{ fontSize: 11 }} />
+            )}
           </div>
 
           {isOpen && (
