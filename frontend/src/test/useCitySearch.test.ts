@@ -32,14 +32,16 @@ describe('useCitySearch', () => {
     expect(result.current.activeIndex).toBe(-1);
   });
 
-  it('does not fetch for short input', async () => {
+  it('fetches for single character input', async () => {
     const { result } = renderHook(() => useCitySearch(vi.fn()));
+    await act(async () => { vi.runAllTimers(); }); // let prefetch settle
+    vi.mocked(fetch).mockClear();
     act(() => {
       result.current.handleChange({ target: { value: 'T' } } as React.ChangeEvent<HTMLInputElement>);
     });
     await act(async () => { vi.runAllTimers(); });
-    expect(fetch).not.toHaveBeenCalled();
-    expect(result.current.isOpen).toBe(false);
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/api/cities?q=T'), expect.any(Object));
+    expect(result.current.isOpen).toBe(true);
   });
 
   it('fetches after debounce for valid input', async () => {

@@ -30,7 +30,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    setIsNight(nightForWeather(weather));
+    setIsNight(nightForWeather(weather)); // eslint-disable-line react-hooks/set-state-in-effect
   }, [weather]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleReset = useCallback(() => {

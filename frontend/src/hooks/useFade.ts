@@ -8,6 +8,7 @@ export function useFade(active: boolean, outMs = 1500): { mounted: boolean; visi
   useEffect(() => {
     clearTimeout(timer.current);
     if (active) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMounted(true);
       const raf = requestAnimationFrame(() => setVisible(true));
       return () => cancelAnimationFrame(raf);

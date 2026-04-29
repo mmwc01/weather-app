@@ -8,10 +8,12 @@ app.use('/api/weather', createWeatherRouter('test-api-key'));
 
 const mockOWMWeather = {
   weather: [{ main: 'Clouds', description: 'broken clouds' }],
-  main: { temp: 23.6, temp_min: 20.5, temp_max: 25.2 },
+  main: { temp: 23.6, temp_min: 20.5, temp_max: 25.2, feels_like: 22.1, humidity: 65 },
   wind: { speed: 4.1 },
+  visibility: 10000,
   name: 'Tokyo',
-  sys: { country: 'JP' },
+  timezone: 32400,
+  sys: { country: 'JP', sunrise: 1694727600, sunset: 1694773200 },
 };
 
 const mockOWMForecast = {
@@ -73,14 +75,20 @@ describe('GET /api/weather/:cityId', () => {
       condition: 'Clouds',
       description: 'broken clouds',
       temp: 24,
+      feelsLike: 22,
       tempMin: 20.5,
       tempMax: 25.2,
+      humidity: 65,
+      visibility: 10,
       wind: 4.1,
+      timezone: 32400,
+      sunrise: 1694727600,
+      sunset: 1694773200,
     });
   });
 
   it('rounds temperature to the nearest integer', async () => {
-    mockFetchOk({ ...mockOWMWeather, main: { temp: 23.4, temp_min: 20.0, temp_max: 25.0 } });
+    mockFetchOk({ ...mockOWMWeather, main: { temp: 23.4, temp_min: 20.0, temp_max: 25.0, feels_like: 22.0, humidity: 65 } });
     const res = await request(app).get('/api/weather/1850147');
     expect(res.body.temp).toBe(23);
   });

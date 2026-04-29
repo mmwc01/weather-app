@@ -51,7 +51,7 @@ export function CloudLayer({ dense = false, windFactor = 1, isNight = false, ent
           ? `rgba(${160 + Math.floor(rng() * 30)}, ${165 + Math.floor(rng() * 30)}, ${195 + Math.floor(rng() * 30)}, 0.85)`
           : `rgba(${220 + Math.floor(rng() * 35)}, ${230 + Math.floor(rng() * 25)}, ${245 + Math.floor(rng() * 10)}, 0.9)`),
     }));
-  }, [dense, isNight]);
+  }, [dense, isNight, entering]);
 
   const bg = isNight
     ? 'transparent'

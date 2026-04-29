@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { WeatherData } from '../types/weather';
 import { formatTemp } from '../utils/temperature';
 import Button from './Button';
@@ -35,7 +36,7 @@ export default function TodaysForecast({ weather, unit, showForecast, onToggleFo
     { label: 'Visibility', value: weather.visibility != null ? `${weather.visibility} km` : '—' },
   ];
 
-  const cityNow    = new Date(Date.now() + weather.timezone * 1000);
+  const cityNow    = useMemo(() => new Date(new Date().getTime() + weather.timezone * 1000), [weather.timezone]);
   const todayLabel = cityNow.toLocaleDateString('en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
   const timeLabel  = cityNow.toLocaleTimeString('en-US', { timeZone: 'UTC', hour: 'numeric', minute: '2-digit' });
 

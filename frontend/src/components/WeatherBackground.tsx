@@ -39,8 +39,10 @@ export default function WeatherBackground({ condition, flashTrigger, windSpeed =
 
   const hasDayClouds = CLOUD_TYPES.has(type);
   const dayCfg: DayCfg = { kind: resolveKind(type), windFactor, windSpeed, flashTrigger };
-  const exitDayRef = useRef<DayCfg>(dayCfg);
-  if (hasDayClouds) exitDayRef.current = dayCfg;
+  const [exitDayCfg, setExitDayCfg] = useState<DayCfg>(dayCfg);
+  useEffect(() => {
+    if (hasDayClouds) setExitDayCfg({ kind: resolveKind(type), windFactor, windSpeed, flashTrigger }); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [hasDayClouds, type, windFactor, windSpeed, flashTrigger]);
   const dayFade = useFade(hasDayClouds, 1800);
 
   const [dayEnterKey, setDayEnterKey] = useState(0);
@@ -54,8 +56,10 @@ export default function WeatherBackground({ condition, flashTrigger, windSpeed =
 
   const hasNightClouds = isNight && CLOUD_TYPES.has(type);
   const isDenseNight = DENSE_NIGHT.has(type);
-  const exitNightRef = useRef({ dense: isDenseNight, windFactor });
-  if (hasNightClouds) exitNightRef.current = { dense: isDenseNight, windFactor };
+  const [exitNightCfg, setExitNightCfg] = useState({ dense: isDenseNight, windFactor });
+  useEffect(() => {
+    if (hasNightClouds) setExitNightCfg({ dense: isDenseNight, windFactor }); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [hasNightClouds, isDenseNight, windFactor]);
   const nightCloudFade = useFade(hasNightClouds, 1800);
 
   const [nightEnterKey, setNightEnterKey] = useState(0);
@@ -67,9 +71,9 @@ export default function WeatherBackground({ condition, flashTrigger, windSpeed =
 
   const starFade = useFade(isNight && NIGHT_STARS_OK.has(type), 1500);
 
-  const activeDayCfg = dayFade.visible ? dayCfg : exitDayRef.current;
-  const activeNightDense = nightCloudFade.visible ? isDenseNight : exitNightRef.current.dense;
-  const activeNightWf = nightCloudFade.visible ? windFactor : exitNightRef.current.windFactor;
+  const activeDayCfg = dayFade.visible ? dayCfg : exitDayCfg;
+  const activeNightDense = nightCloudFade.visible ? isDenseNight : exitNightCfg.dense;
+  const activeNightWf = nightCloudFade.visible ? windFactor : exitNightCfg.windFactor;
 
   return (
     <>

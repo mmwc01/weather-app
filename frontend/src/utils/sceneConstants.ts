@@ -61,9 +61,8 @@ export function draw4PointStar(
   for (let i = 0; i < 8; i++) {
     const a = (i * Math.PI / 4) - Math.PI / 2;
     const r = i % 2 === 0 ? outerR : innerR;
-    i === 0
-      ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a))
-      : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+    if (i === 0) ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+    else ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
   }
   ctx.closePath();
   ctx.fill();
