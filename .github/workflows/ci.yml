@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm run install:all
+
+      - name: Lint (frontend)
+        run: cd frontend && npm run lint
+
+      - name: Test (frontend)
+        run: cd frontend && npm test
+
+      - name: Test (backend)
+        run: cd backend && npm test
+
+  #-----Hook up push to master to auto deploy to fly, not implemented, but this would be the setup -----#
+  # deploy:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - uses: superfly/flyctl-actions/setup-flyctl@master
+  #
+  #     - run: flyctl deploy --remote-only
+  #       env:
+  #         FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
