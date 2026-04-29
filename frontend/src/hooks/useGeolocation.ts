@@ -24,15 +24,13 @@ function errorStatus(err: GeolocationPositionError): LocationStatus {
 
 export function useGeolocation(onCity: (city: CityOption) => Promise<void>) {
   const [locationStatus, setLocationStatus] = useState<LocationStatus>('idle');
-  const [geoResolved, setGeoResolved] = useState(false);
+  // start as resolved if the browser doesn't support geolocation at all
+  const [geoResolved, setGeoResolved] = useState(() => !navigator.geolocation);
   const onCityRef = useRef(onCity);
   useEffect(() => { onCityRef.current = onCity; });
 
   useEffect(() => {
-    if (!navigator.geolocation) {
-      setGeoResolved(true);
-      return;
-    }
+    if (!navigator.geolocation) return;
 
     const tryDetect = () => {
       setLocationStatus('loading');
@@ -52,7 +50,13 @@ export function useGeolocation(onCity: (city: CityOption) => Promise<void>) {
     if (navigator.permissions) {
       navigator.permissions
         .query({ name: 'geolocation' })
-        .then(perm => { perm.state === 'denied' ? setGeoResolved(true) : tryDetect(); })
+        .then(perm => {
+          if (perm.state === 'denied') {
+            setGeoResolved(true);
+          } else {
+            tryDetect();
+          }
+        })
         .catch(() => tryDetect());
     } else {
       tryDetect();
