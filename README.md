@@ -74,9 +74,9 @@ The spec asked for a dropdown with three fixed cities (Toronto, Ottawa, Tokyo). 
 
 The spec also had the frontend call OpenWeatherMap directly with the API key in the URL. I moved that behind an Express backend instead, since putting an API key in client-side code isn't something you'd actually ship.
 
-The forecast layout in the spec was a date-tabbed table of 3-hour slots. I went with grouped 5-day cards instead — same data, different presentation.
+I kept the forecast layout the same as the example from the spec, including significant digits for temperature readings, to reflect requirements. Arguably it would be more user centric to round to the nearest degree.
 
-SCALE ASSUMPTIONS: the backend is a single Node.js process with no response caching and no rate limiting. Every weather or forecast load hits OpenWeatherMap directly. On the free tier (60 calls/minute), you're looking at roughly 20–30 concurrent active users before the api starts returning 429s. City search is fine — that runs against an in-memory list. If this needed to handle real traffic you'd want a short TTL cache on weather responses (weather doesn't change by the minute anyway) and either an upgraded OWM plan or a request queue. I assumed light use for a poc or a take-home assessment like this one.
+SCALE ASSUMPTIONS: the backend is a single Node.js process with no response caching and no rate limiting. Every weather or forecast load hits OpenWeatherMap directly. On the free tier (60 calls/minute), you're looking at roughly 20–30 concurrent active users before the api starts returning 429s. City search is fine, that runs against an in-memory list. If this needed to handle real traffic you'd want a short TTL cache on weather responses (weather doesn't change by the minute anyway) and either an upgraded OWM plan or a request queue. I assumed light use for a poc or a take-home assessment like this one.
 
 LIMITATIONS DURING IMPLEMENTATION: the sample from the pdf suggested I display a total of 6 days worth of data, however the free tier of the OpenWeatherMap api has a hard limit of 5 days worth of values, with the caveat that 6 days worth of data is available by upgrading to their One Call api. I assumed for this task, the free tier would suffice.
 
