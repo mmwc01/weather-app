@@ -50,6 +50,8 @@ export default function LoadingSpinner() {
         letterSpacing: '1.8px',
         textTransform: 'uppercase',
         fontFamily: 'Figtree, sans-serif',
+        textAlign: 'center',
+        maxWidth: '18ch',
       }}>
         stepping outside to check the weather&hellip; hold on&hellip;
       </p>

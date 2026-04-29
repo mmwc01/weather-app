@@ -17,7 +17,9 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function renderEmpty(locationStatus: 'idle' | 'loading' | 'granted' | 'denied' = 'idle') {
+type LocationStatus = 'idle' | 'loading' | 'granted' | 'denied';
+
+function renderEmpty(locationStatus: LocationStatus = 'idle') {
   const onSelect = vi.fn();
   const onRequestLocation = vi.fn();
   render(<EmptyState onSelect={onSelect} locationStatus={locationStatus} onRequestLocation={onRequestLocation} />);
@@ -39,7 +41,7 @@ describe('EmptyState', () => {
   });
 
   it('shows the right label for each location status', () => {
-    const cases: Array<[typeof locationStatus, string]> = [
+    const cases: Array<[LocationStatus, string]> = [
       ['idle',    'Detect my location'],
       ['loading', 'Detecting\u2026'],
       ['granted', 'Location found'],

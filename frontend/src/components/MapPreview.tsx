@@ -1,3 +1,7 @@
+import { useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
 interface MapPreviewProps {
   lat: number;
   lon: number;
@@ -5,21 +9,43 @@ interface MapPreviewProps {
 }
 
 export default function MapPreview({ lat, lon, cityName }: MapPreviewProps) {
-  const delta = 0.3;
-  const bbox = `${lon - delta}%2C${lat - delta}%2C${lon + delta}%2C${lat + delta}`;
-  const embedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
+  const containerRef = useRef<HTMLDivElement>(null);
   const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const map = L.map(containerRef.current, {
+      center: [lat, lon],
+      zoom: 9,
+      zoomControl: false,
+      dragging: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      boxZoom: false,
+      keyboard: false,
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20,
+    }).addTo(map);
+
+    const pin = L.divIcon({
+      className: '',
+      html: '<div style="width:10px;height:10px;border-radius:50%;background:#01012d;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4)"></div>',
+      iconSize: [10, 10],
+      iconAnchor: [5, 5],
+    });
+    L.marker([lat, lon], { icon: pin }).addTo(map);
+
+    return () => { map.remove(); };
+  }, [lat, lon]);
 
   return (
     <div className="rounded-[8px] overflow-hidden shadow-sm relative group w-full lg:w-[320px]">
-      <iframe
-        title={`Map of ${cityName}`}
-        src={embedSrc}
-        width="100%"
-        height={220}
-        className="block border-0"
-        loading="lazy"
-      />
+      <div ref={containerRef} style={{ width: '100%', height: 220 }} />
       <a
         href={googleMapsUrl}
         target="_blank"
