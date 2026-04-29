@@ -173,3 +173,29 @@ body {
     animation-iteration-count: 1 !important;
   }
 }
+
+.loading-message {
+  margin-top: 2rem;
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  font-family: 'Figtree', sans-serif;
+
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+
+  white-space: nowrap;
+  max-width: 100%;
+
+  animation: wxPulseText 2.8s ease-in-out infinite;
+}
+
+@media (max-width: 640px) {
+  .loading-message {
+    white-space: normal;
+    max-width: 30ch;
+  }
+}

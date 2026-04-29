@@ -44,15 +44,7 @@ export default function LoadingSpinner() {
         </g>
       </svg>
 
-      <p className="mt-8 wx-pulse-text" style={{
-        fontSize: 12,
-        fontWeight: 700,
-        letterSpacing: '1.8px',
-        textTransform: 'uppercase',
-        fontFamily: 'Figtree, sans-serif',
-        textAlign: 'center',
-        maxWidth: '18ch',
-      }}>
+      <p className="mt-8 loading-message" >
         stepping outside to check the weather&hellip; hold on&hellip;
       </p>
     </div>
