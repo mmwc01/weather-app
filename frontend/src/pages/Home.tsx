@@ -7,11 +7,14 @@ import WeatherBackground from '../components/WeatherBackground';
 import ScenePreviewPanel from '../components/ScenePreviewPanel';
 import Card from '../components/Card';
 import CardHeader from '../components/CardHeader';
+import EmptyState from '../components/EmptyState';
 import ResetButton from '../components/ResetButton';
 import DayNightToggle from '../components/DayNightToggle';
 import { useWeatherState } from '../hooks/useWeatherState';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { resolveCardBg } from '../utils/cardScene';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Home() {
   const { selectedCity, weather, forecast, showForecast, loading, error, handleCitySelect, handleToggleForecast } = useWeatherState();
@@ -21,7 +24,14 @@ export default function Home() {
   const [isNight, setIsNight] = useState(false);
   const [bgFlashCount, setBgFlashCount] = useState(0);
 
-  useGeolocation(handleCitySelect);
+  const [prefetchReady, setPrefetchReady] = useState(false);
+  const { locationStatus, requestLocation, geoResolved } = useGeolocation(handleCitySelect);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/cities?q=&page=1&limit=10`)
+      .catch(() => {})
+      .finally(() => setPrefetchReady(true));
+  }, []);
 
   const nightForWeather = useCallback((w: typeof weather) => {
     if (!w) return false;
@@ -55,7 +65,7 @@ export default function Home() {
   const activeWind = previewWind ?? weather?.wind ?? 0;
   const cardBg = resolveCardBg(activeCondition, isNight);
 
-  if (loading && !weather) return <LoadingSpinner />;
+  if (!prefetchReady || !geoResolved || (loading && !weather)) return <LoadingSpinner />;
 
   return (
     <>
@@ -90,7 +100,6 @@ export default function Home() {
             forecastSlot={showForecast && forecast ? <ForecastTable forecast={forecast} unit={unit} /> : undefined}
           >
             <CardHeader
-              selectedCity={selectedCity}
               unit={unit}
               onSelect={handleCitySelect}
               onUnitChange={setUnit}
@@ -119,7 +128,15 @@ export default function Home() {
                     </div>
                   )}
                 </>
-              ) : null}
+              ) : (
+                <div className="w-full">
+                  <EmptyState
+                    onSelect={handleCitySelect}
+                    locationStatus={locationStatus}
+                    onRequestLocation={requestLocation}
+                  />
+                </div>
+              )}
             </div>
           </Card>
         </div>

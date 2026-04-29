@@ -34,7 +34,7 @@ describe('useCitySearch', () => {
 
   it('fetches for single character input', async () => {
     const { result } = renderHook(() => useCitySearch(vi.fn()));
-    await act(async () => { vi.runAllTimers(); }); // let prefetch settle
+    await act(async () => { vi.runAllTimers(); }); // flush prefetch
     vi.mocked(fetch).mockClear();
     act(() => {
       result.current.handleChange({ target: { value: 'T' } } as React.ChangeEvent<HTMLInputElement>);
@@ -72,12 +72,12 @@ describe('useCitySearch', () => {
     expect(result.current.results).toEqual([]);
   });
 
-  it('calls onSelect and resets state when a city is selected', () => {
+  it('fills the input with the city label on select', () => {
     const onSelect = vi.fn();
     const { result } = renderHook(() => useCitySearch(onSelect));
     act(() => { result.current.select(mockCities[0]); });
     expect(onSelect).toHaveBeenCalledWith(mockCities[0]);
-    expect(result.current.inputValue).toBe('');
+    expect(result.current.inputValue).toBe('Toronto, Ontario, CA');
     expect(result.current.isOpen).toBe(false);
   });
 

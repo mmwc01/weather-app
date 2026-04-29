@@ -3,13 +3,12 @@ import CitySearch from './CitySearch';
 import Button from './Button';
 
 interface Props {
-  selectedCity?: CityOption | null;
   unit: 'C' | 'F';
   onSelect: (city: CityOption) => void;
   onUnitChange: (unit: 'C' | 'F') => void;
 }
 
-export default function CardHeader({ selectedCity, unit, onSelect, onUnitChange }: Props) {
+export default function CardHeader({ unit, onSelect, onUnitChange }: Props) {
   return (
     <div className="mb-5 sm:mb-6">
       <div className="flex items-center justify-between mb-5 sm:mb-6">
@@ -36,7 +35,7 @@ export default function CardHeader({ selectedCity, unit, onSelect, onUnitChange 
         </div>
       </div>
 
-      <CitySearch onSelect={onSelect} selectedCity={selectedCity} />
+      <CitySearch onSelect={onSelect} />
     </div>
   );
 }

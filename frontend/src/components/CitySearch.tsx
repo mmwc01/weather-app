@@ -4,19 +4,17 @@ import { useCitySearch } from '../hooks/useCitySearch';
 import { CityOptionSchema } from '../schemas/api';
 import Tooltip from './Tooltip';
 import CityDropdown from './CityDropdown';
-import { cityLabel } from '../utils/cityLabel';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface CitySearchProps {
-  onSelect:      (city: CityOption) => void;
-  selectedCity?: CityOption | null;
+  onSelect: (city: CityOption) => void;
 }
 
-export default function CitySearch({ onSelect, selectedCity }: CitySearchProps) {
+export default function CitySearch({ onSelect }: CitySearchProps) {
   const {
     inputValue, results, isOpen, loading, loadingMore, hasError, hasMore, activeIndex,
-    handleChange, handleFocus, handleKeyDown, handleBlur, handleMouseEnter, clearInput, select, loadMore,
+    handleChange, handleFocus, handleKeyDown, handleBlur, handleMouseEnter, clearInput, closeDropdown, select, loadMore,
   } = useCitySearch(onSelect);
 
   const [luckyLoading, setLuckyLoading] = useState(false);
@@ -46,7 +44,9 @@ export default function CitySearch({ onSelect, selectedCity }: CitySearchProps) 
     }
   }
 
-  const placeholder = selectedCity ? cityLabel(selectedCity) : 'Start typing to search cities…';
+  const activeOptionId = activeIndex >= 0 && results[activeIndex]
+    ? `city-option-${results[activeIndex].id}`
+    : undefined;
 
   return (
     <div className="w-full" role="search">
@@ -70,12 +70,14 @@ export default function CitySearch({ onSelect, selectedCity }: CitySearchProps) 
               onFocus={handleFocus}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
-              placeholder={placeholder}
+              placeholder="Search cities…"
               autoComplete="off"
               spellCheck={false}
+              role="combobox"
               aria-autocomplete="list"
               aria-expanded={isOpen}
-              aria-owns={isOpen ? 'city-search-listbox' : undefined}
+              aria-controls="city-search-listbox"
+              aria-activedescendant={activeOptionId}
               className="flex-1 bg-transparent outline-none focus:ring-0 focus:shadow-none text-sm cursor-text text-primary placeholder:text-[rgba(1,1,45,0.4)]"
               style={{ fontFamily: 'Figtree, sans-serif' }}
             />
@@ -95,7 +97,24 @@ export default function CitySearch({ onSelect, selectedCity }: CitySearchProps) 
             )}
 
             {!inputValue && !loading && (
-              <i aria-hidden="true" className="fa-solid fa-chevron-down shrink-0 text-muted" style={{ fontSize: 11 }} />
+              <button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  if (isOpen) {
+                    closeDropdown();
+                  } else {
+                    inputRef.current?.focus();
+                    handleFocus();
+                  }
+                }}
+                aria-label="Toggle city list"
+                aria-expanded={isOpen}
+                aria-controls="city-search-listbox"
+                tabIndex={-1}
+                className="shrink-0 flex items-center justify-center w-4 h-4 text-muted hover:text-primary transition-colors focus:outline-none"
+              >
+                <i aria-hidden="true" className={`fa-solid fa-chevron-${isOpen ? 'up' : 'down'}`} style={{ fontSize: 11 }} />
+              </button>
             )}
           </div>
 

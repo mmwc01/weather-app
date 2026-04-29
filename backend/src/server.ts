@@ -72,9 +72,10 @@ async function loadCities(): Promise<City[]> {
       city.country = override.country;
     }
   }
-  cities.sort((a, b) => a.name.localeCompare(b.name));
-  logger.info('city list loaded', { count: cities.length });
-  return cities;
+  const filtered = cities.filter(c => c.name.trim() !== '-');
+  filtered.sort((a, b) => a.name.localeCompare(b.name));
+  logger.info('city list loaded', { count: filtered.length });
+  return filtered;
 }
 
 const apiKey = process.env.OPENWEATHERMAP_API_KEY;

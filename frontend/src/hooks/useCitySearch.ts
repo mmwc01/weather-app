@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { CityOption } from '../types/weather';
 import { CitiesResponseSchema } from '../schemas/api';
+import { cityLabel } from '../utils/cityLabel';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const MIN_CHARS = 1;
@@ -30,6 +31,7 @@ export interface CitySearchActions {
   handleBlur: () => void;
   handleMouseEnter: (index: number) => void;
   clearInput: () => void;
+  closeDropdown: () => void;
   select: (city: CityOption) => void;
   loadMore: () => void;
 }
@@ -150,11 +152,6 @@ export function useCitySearch(
       setResults([]); setIsOpen(false); setLoading(false); setHasError(false); setHasMore(false);
       return;
     }
-    if (val.trim().length < MIN_CHARS) {
-      abortRef.current?.abort();
-      setResults([]); setIsOpen(false); setLoading(false); setHasMore(false);
-      return;
-    }
 
     timerRef.current = setTimeout(() => doSearch(val), DEBOUNCE);
   }
@@ -190,10 +187,14 @@ export function useCitySearch(
   function select(city: CityOption) {
     if (timerRef.current) clearTimeout(timerRef.current);
     abortRef.current?.abort();
-    setInputValue(''); setResults([]); setIsOpen(false); setActiveIndex(-1);
+    setInputValue(cityLabel(city)); setResults([]); setIsOpen(false); setActiveIndex(-1);
     setLoading(false); setLoadingMore(false); setHasMore(false);
     currentQueryRef.current = null;
     onSelect(city);
+  }
+
+  function closeDropdown() {
+    setIsOpen(false); setActiveIndex(-1);
   }
 
   function clearInput() {
@@ -206,6 +207,6 @@ export function useCitySearch(
 
   return {
     inputValue, results, isOpen, loading, loadingMore, hasError, hasMore, activeIndex,
-    handleChange, handleFocus, handleKeyDown, handleBlur, handleMouseEnter, clearInput, select, loadMore,
+    handleChange, handleFocus, handleKeyDown, handleBlur, handleMouseEnter, clearInput, closeDropdown, select, loadMore,
   };
 }
